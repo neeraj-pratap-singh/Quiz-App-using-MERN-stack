@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const userRoutes = require('./routes/userRoutes');
+const questionRoutes = require('./routes/questionRoutes');
 
 const app = express();
 
@@ -12,7 +14,11 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
-// Define a simple route
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/questions', questionRoutes);
+
+// Default Route
 app.get('/', (req, res) => {
   res.send('Quiz Application API');
 });
