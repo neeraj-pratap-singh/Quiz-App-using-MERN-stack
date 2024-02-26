@@ -8,8 +8,9 @@ export default function ResultTable() {
     useEffect(() => {
         getServerData(`${process.env.REACT_APP_SERVER_HOSTNAME}/api/result`, (res) => {
             setData(res)
+            console.log('result:-', res)
         })
-    })
+    },[])
 
   return (
     <div>
@@ -30,7 +31,7 @@ export default function ResultTable() {
                             <td>{v?.username || ''}</td>
                             <td>{v?.attempts || 0}</td>
                             <td>{v?.points || 0}</td>
-                            <td>{v?.achived || ""}</td>
+                            <td>{v?.achieved || ""}</td>
                         </tr>
                     ))
                 }

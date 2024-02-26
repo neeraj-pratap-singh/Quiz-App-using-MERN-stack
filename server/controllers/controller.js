@@ -3,67 +3,66 @@ import Results from "../models/resultSchema.js";
 import questions, { answers } from '../database/data.js'
 
 /** get all questions */
-export async function getQuestions(req, res){
+export const getQuestions = async (req, res) => {
     try {
-        const q = await Questions.find();
-        res.json(q)
+        const questions = await Questions.find();
+        res.json(questions);
     } catch (error) {
-        res.json({ error })
+        res.status(500).json({ message: "Failed to retrieve questions", error: error.message });
     }
-}
+};
 
 /** insert all questinos */
-export async function insertQuestions(req, res){
+export const insertQuestions = async (req, res) => {
     try {
-        Questions.insertMany({ questions, answers }, function(err, data){
-            res.json({ msg: "Data Saved Successfully...!"})
-        })
+        await Questions.insertMany({questions, answers}); // Assuming questions is an array of question objects
+        res.json({ message: "Data Saved Successfully...!" });
     } catch (error) {
-        res.json({ error })
+        res.status(500).json({ message: "Failed to save data", error: error.message });
     }
-}
+};
 
 /** Delete all Questions */
-export async function dropQuestions(req, res){
-   try {
+export const dropQuestions = async (req, res) => {
+    try {
         await Questions.deleteMany();
-        res.json({ msg: "Questions Deleted Successfully...!"});
-   } catch (error) {
-        res.json({ error })
-   }
-}
+        res.json({ message: "Questions Deleted Successfully...!" });
+    } catch (error) {
+        res.status(500).json({ message: "Failed to delete questions", error: error.message });
+    }
+};
 
 /** get all result */
-export async function getResult(req, res){
+export const getResult = async (req, res) => {
     try {
-        const r = await Results.find();
-        res.json(r)
+        const results = await Results.find();
+        res.json(results);
     } catch (error) {
-        res.json({ error })
+        res.status(500).json({ message: "Failed to retrieve results", error: error.message });
     }
-}
+};
 
 /** post all result */
-export async function storeResult(req, res){
-   try {
-        const { username, result, attempts, points, achived } = req.body;
-        if(!username && !result) throw new Error('Data Not Provided...!');
+export const storeResult = async (req, res) => {
+    try {
+        const { username, result, attempts, points, achieved } = req.body;
+        if (!username || !result) {
+            throw new Error('Data Not Provided...!');
+        }
 
-        Results.create({ username, result, attempts, points, achived }, function(err, data){
-            res.json({ msg : "Result Saved Successfully...!"})
-        })
-
-   } catch (error) {
-        res.json({error})
-   }
-}
+        const newResult = await Results.create({ username, result, attempts, points, achieved });
+        res.json({ message: "Result Saved Successfully...!", data: newResult });
+    } catch (error) {
+        res.status(400).json({ message: "Failed to save result", error: error.message });
+    }
+};
 
 /** delete all result */
-export async function dropResult(req, res){
+export const dropResult = async (req, res) => {
     try {
         await Results.deleteMany();
-        res.json({ msg : "Result Deleted Successfully...!"})
+        res.json({ message: "Result Deleted Successfully...!" });
     } catch (error) {
-        res.json({ error })
+        res.status(500).json({ message: "Failed to delete results", error: error.message });
     }
-}
+};
