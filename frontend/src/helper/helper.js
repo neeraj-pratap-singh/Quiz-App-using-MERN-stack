@@ -22,6 +22,7 @@ export function CheckUserExist({ children }){
 
 /** get server data */
 export async function getServerData(url, callback){
+    console.log('getServerData',url)
     const data = await (await axios.get(url))?.data;
     return callback ? callback(data) : data;
 }
